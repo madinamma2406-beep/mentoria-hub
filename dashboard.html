@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кабинет — Mentoria Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--ink:#0F1117;--ink-soft:#4B5263;--canvas:#F7F8FC;--white:#FFFFFF;--brand:#5B6BF8;--brand-dk:#3A4CE0;--brand-lt:#EEF0FE;--border:#E4E7EF;--shadow-md:0 4px 20px rgba(15,17,23,.10);--r:12px;--green:#22C55E;--green-lt:#DCFCE7;--red:#EF4444;--red-lt:#FEF2F2}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--canvas);color:var(--ink);line-height:1.6}
+    nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .nav-logo span{color:var(--brand)}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);display:inline-block}
+    .nav-links{display:flex;align-items:center;gap:6px}
+    .nav-links a{font-size:.9rem;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:6px 14px;border-radius:8px;transition:background .15s,color .15s}
+    .nav-links a:hover,.nav-links a.active{background:var(--brand-lt);color:var(--brand)}
+    .btn-nav{background:var(--brand);color:var(--white)!important;border-radius:8px;padding:7px 18px!important}
+
+    /* SETUP SCREEN */
+    .setup-screen{max-width:520px;margin:60px auto;padding:0 24px}
+    .setup-card{background:var(--white);border:1.5px solid var(--border);border-radius:20px;padding:36px}
+    .setup-card h2{font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:800;margin-bottom:8px}
+    .setup-card p{color:var(--ink-soft);font-size:.92rem;margin-bottom:28px}
+    .form-group{margin-bottom:18px}
+    .form-group label{display:block;font-size:.82rem;font-weight:600;margin-bottom:6px;color:var(--ink)}
+    .form-group input,.form-group select{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:.92rem;font-family:'Inter',sans-serif;color:var(--ink);outline:none;transition:border-color .15s}
+    .form-group input:focus,.form-group select:focus{border-color:var(--brand)}
+    .interests{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+    .interest-btn{padding:6px 14px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);font-size:.82rem;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .15s}
+    .interest-btn.selected{background:var(--brand);color:var(--white);border-color:var(--brand)}
+    .btn-setup{width:100%;background:var(--brand);color:var(--white);font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;padding:14px;border-radius:var(--r);border:none;cursor:pointer;margin-top:8px;transition:background .15s}
+    .btn-setup:hover{background:var(--brand-dk)}
+
+    /* DASHBOARD */
+    .dashboard{display:none;max-width:1040px;margin:0 auto;padding:32px 24px 72px}
+
+    /* PROFILE HEADER */
+    .profile-header{background:linear-gradient(135deg,#5B6BF8,#8B5CF6);border-radius:20px;padding:32px;color:var(--white);display:flex;align-items:center;gap:24px;margin-bottom:28px;flex-wrap:wrap}
+    .avatar{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0}
+    .profile-info h2{font-family:'Manrope',sans-serif;font-size:1.4rem;font-weight:800;margin-bottom:4px}
+    .profile-info p{opacity:.85;font-size:.9rem}
+    .profile-badges{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap}
+    .badge{background:rgba(255,255,255,.2);border-radius:100px;padding:4px 12px;font-size:.78rem;font-weight:600}
+
+    /* STATS ROW */
+    .stats-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:28px}
+    .stat-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:20px}
+    .stat-card .num{font-family:'Manrope',sans-serif;font-size:1.8rem;font-weight:800;color:var(--brand);display:block}
+    .stat-card .lbl{font-size:.82rem;color:var(--ink-soft);margin-top:2px}
+
+    /* SECTIONS */
+    .section-title{font-family:'Manrope',sans-serif;font-size:1.1rem;font-weight:800;margin-bottom:16px}
+
+    /* SAVED */
+    .saved-list{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+    .saved-item{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .saved-item h4{font-family:'Manrope',sans-serif;font-size:.92rem;font-weight:700}
+    .saved-item span{font-size:.78rem;color:var(--ink-soft)}
+    .deadline-badge{font-size:.75rem;font-weight:600;color:var(--red);background:var(--red-lt);padding:3px 10px;border-radius:100px;white-space:nowrap}
+
+    /* COURSES PROGRESS */
+    .courses-list{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+    .course-item{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:16px 20px}
+    .course-item-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+    .course-item h4{font-family:'Manrope',sans-serif;font-size:.92rem;font-weight:700}
+    .pct-label{font-size:.82rem;font-weight:600;color:var(--brand)}
+    .bar{height:6px;background:var(--border);border-radius:100px}
+    .bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--brand),#8B5CF6)}
+
+    /* RECOMMENDATIONS */
+    .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:32px}
+    .rec-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:18px;transition:border-color .15s,box-shadow .15s}
+    .rec-card:hover{border-color:var(--brand);box-shadow:var(--shadow-md)}
+    .rec-tag{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:100px;background:var(--brand-lt);color:var(--brand);display:inline-block;margin-bottom:10px}
+    .rec-card h4{font-family:'Manrope',sans-serif;font-size:.9rem;font-weight:700;margin-bottom:6px}
+    .rec-card p{font-size:.82rem;color:var(--ink-soft)}
+
+    /* EMPTY */
+    .empty-state{text-align:center;padding:32px;color:var(--ink-soft);font-size:.9rem}
+
+    @media(max-width:600px){.nav-links a:not(.btn-nav){display:none}.profile-header{flex-direction:column;text-align:center}.profile-badges{justify-content:center}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html"><span class="dot"></span>Mentoria <span>Hub</span></a>
+  <div class="nav-links">
+    <a href="opportunities.html">Возможности</a>
+    <a href="courses.html">Курсы</a>
+    <a href="dashboard.html" class="active">Кабинет</a>
+  </div>
+</nav>
+
+<!-- SETUP -->
+<div class="setup-screen" id="setupScreen">
+  <div class="setup-card">
+    <h2>👋 Добро пожаловать!</h2>
+    <p>Расскажи немного о себе — платформа подберёт лучшие возможности именно для тебя.</p>
+    <div class="form-group">
+      <label>Твоё имя</label>
+      <input type="text" id="inputName" placeholder="Например: Мадина" />
+    </div>
+    <div class="form-group">
+      <label>Класс</label>
+      <select id="inputGrade">
+        <option value="">Выбери класс</option>
+        <option>8 класс</option>
+        <option>9 класс</option>
+        <option>10 класс</option>
+        <option>11 класс</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Цель</label>
+      <select id="inputGoal">
+        <option value="">Выбери цель</option>
+        <option>Поступить в зарубежный вуз</option>
+        <option>Выиграть олимпиаду</option>
+        <option>Получить стипендию</option>
+        <option>Развить навыки</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Интересы (выбери несколько)</label>
+      <div class="interests">
+        <button class="interest-btn" onclick="toggleInterest(this)">🔬 STEM</button>
+        <button class="interest-btn" onclick="toggleInterest(this)">💼 Бизнес</button>
+        <button class="interest-btn" onclick="toggleInterest(this)">💻 IT</button>
+        <button class="interest-btn" onclick="toggleInterest(this)">🌍 Социальное</button>
+        <button class="interest-btn" onclick="toggleInterest(this)">💰 Финансы</button>
+        <button class="interest-btn" onclick="toggleInterest(this)">📝 Языки</button>
+      </div>
+    </div>
+    <button class="btn-setup" onclick="saveProfile()">Создать профиль →</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboardScreen">
+
+  <div class="profile-header">
+    <div class="avatar" id="avatarEmoji">🎓</div>
+    <div class="profile-info">
+      <h2 id="profileName">Имя</h2>
+      <p id="profileSub">Класс · Цель</p>
+      <div class="profile-badges" id="profileBadges"></div>
+    </div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card"><span class="num" id="statSaved">0</span><span class="lbl">Сохранено возможностей</span></div>
+    <div class="stat-card"><span class="num" id="statCourses">0</span><span class="lbl">Курсов начато</span></div>
+    <div class="stat-card"><span class="num" id="statLessons">0</span><span class="lbl">Уроков пройдено</span></div>
+    <div class="stat-card"><span class="num" id="statDays">1</span><span class="lbl">День на платформе</span></div>
+  </div>
+
+  <div class="section-title">📌 Сохранённые возможности</div>
+  <div class="saved-list" id="savedList"></div>
+
+  <div class="section-title">📚 Прогресс по курсам</div>
+  <div class="courses-list" id="coursesList"></div>
+
+  <div class="section-title">⭐ Рекомендации для тебя</div>
+  <div class="rec-grid" id="recGrid"></div>
+
+  <button onclick="resetProfile()" style="background:none;border:none;color:var(--ink-soft);font-size:.82rem;cursor:pointer;text-decoration:underline">Изменить профиль</button>
+</div>
+
+<script>
+const courseData=[
+  {id:'math',emoji:'📐',title:'Основы математики',total:12},
+  {id:'english',emoji:'🇬🇧',title:'Английский для академического успеха',total:10},
+  {id:'biology',emoji:'🔬',title:'Основы биологии',total:8},
+  {id:'cs',emoji:'💻',title:'Основы информатики',total:8},
+  {id:'sat',emoji:'📝',title:'Подготовка к SAT / IELTS',total:10}
+];
+
+const allRecs=[
+  {tag:'STEM',title:'Олимпиада по математике IMO',desc:'Отбор в марте–апреле. Начни готовиться сейчас.',cats:['🔬 STEM']},
+  {tag:'IT',title:'Хакатон Google Student Developer',desc:'Командный хакатон с менторами от Google.',cats:['💻 IT']},
+  {tag:'Бизнес',title:'Young Entrepreneurs Challenge',desc:'Конкурс бизнес-идей, призовой фонд $5 000.',cats:['💼 Бизнес']},
+  {tag:'Финансы',title:'Stock Market Game',desc:'Симуляция фондового рынка для школьников.',cats:['💰 Финансы']},
+  {tag:'Социальное',title:'Волонтёрство AIESEC',desc:'Проекты в 120+ странах мира.',cats:['🌍 Социальное']},
+  {tag:'Языки',title:'Летняя школа MIT',desc:'Бесплатная онлайн-программа с сертификатом.',cats:['📝 Языки','🌍 Социальное']},
+  {tag:'STEM',title:'Стажировка НУ',desc:'Исследовательская стажировка в лабораториях.',cats:['🔬 STEM']},
+  {tag:'Бизнес',title:'Junior Achievement',desc:'Создай свою компанию и защити перед жюри.',cats:['💼 Бизнес']}
+];
+
+function
