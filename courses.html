@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Курсы — Mentoria Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--ink:#0F1117;--ink-soft:#4B5263;--canvas:#F7F8FC;--white:#FFFFFF;--brand:#5B6BF8;--brand-dk:#3A4CE0;--brand-lt:#EEF0FE;--border:#E4E7EF;--shadow-md:0 4px 20px rgba(15,17,23,.10);--r:12px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--canvas);color:var(--ink);line-height:1.6}
+    nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .nav-logo span{color:var(--brand)}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);display:inline-block}
+    .nav-links{display:flex;align-items:center;gap:6px}
+    .nav-links a{font-size:.9rem;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:6px 14px;border-radius:8px;transition:background .15s,color .15s}
+    .nav-links a:hover,.nav-links a.active{background:var(--brand-lt);color:var(--brand)}
+    .btn-nav{background:var(--brand);color:var(--white)!important;border-radius:8px;padding:7px 18px!important}
+    .page-header{background:var(--white);border-bottom:1px solid var(--border);padding:36px 24px 28px}
+    .page-header-inner{max-width:1040px;margin:0 auto}
+    .page-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
+    .page-header h1{font-family:'Manrope',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:6px}
+    .page-header p{color:var(--ink-soft);font-size:.95rem}
+    .main{max-width:1040px;margin:0 auto;padding:36px 24px 72px}
+    .overlay{display:none;position:fixed;inset:0;background:rgba(15,17,23,.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+    .overlay.open{display:flex}
+    .modal{background:var(--white);border-radius:20px;width:100%;max-width:640px;max-height:90vh;overflow-y:auto;padding:32px;position:relative}
+    .modal-close{position:absolute;top:16px;right:16px;background:var(--canvas);border:none;border-radius:8px;width:32px;height:32px;font-size:1.1rem;cursor:pointer}
+    .modal-thumb{height:120px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:3rem;margin-bottom:20px}
+    .modal h2{font-family:'Manrope',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:8px}
+    .modal-desc{color:var(--ink-soft);font-size:.92rem;margin-bottom:20px}
+    .modal-progress-label{display:flex;justify-content:space-between;font-size:.82rem;font-weight:600;margin-bottom:6px}
+    .progress-bar{height:8px;background:var(--border);border-radius:100px;margin-bottom:24px}
+    .progress-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--brand),#8B5CF6);transition:width .4s}
+    .lessons-title{font-family:'Manrope',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:12px}
+    .lesson-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s}
+    .lesson-item:hover{border-color:var(--brand);background:var(--brand-lt)}
+    .lesson-item.done{background:#F0FDF4;border-color:#86EFAC}
+    .lesson-num{width:28px;height:28px;border-radius:8px;background:var(--brand-lt);color:var(--brand);font-size:.78rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .lesson-item.done .lesson-num{background:#DCFCE7;color:#15803D}
+    .lesson-info{flex:1}
+    .lesson-info strong{font-size:.9rem;font-weight:600;display:block}
+    .lesson-info span{font-size:.78rem;color:var(--ink-soft)}
+    .btn-enroll{display:block;width:100%;background:var(--brand);color:var(--white);font-family:'Manrope',sans-serif;font-weight:700;font-size:1rem;padding:14px;border-radius:var(--r);border:none;cursor:pointer;margin-top:20px;transition:background .15s}
+    .btn-enroll:hover{background:var(--brand-dk)}
+    .courses-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+    .course-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;transition:box-shadow .15s,transform .15s;cursor:pointer}
+    .course-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}
+    .course-thumb{height:110px;display:flex;align-items:center;justify-content:center;font-size:2.8rem}
+    .thumb-blue{background:linear-gradient(135deg,#EEF0FE,#C7D2FD)}
+    .thumb-orange{background:linear-gradient(135deg,#FEF5E7,#FDE68A)}
+    .thumb-green{background:linear-gradient(135deg,#DCFCE7,#A7F3D0)}
+    .thumb-purple{background:linear-gradient(135deg,#FDF4FF,#E9D5FF)}
+    .thumb-red{background:linear-gradient(135deg,#FFF1F2,#FECDD3)}
+    .course-body{padding:18px}
+    .course-level{font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--brand);margin-bottom:6px}
+    .course-body h3{font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;margin-bottom:6px}
+    .course-body p{font-size:.86rem;color:var(--ink-soft);margin-bottom:14px}
+    .course-meta{display:flex;gap:12px;font-size:.78rem;color:var(--ink-soft);margin-bottom:14px}
+    .progress-bar-sm{height:5px;background:var(--border);border-radius:100px;margin-bottom:14px}
+    .progress-fill-sm{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--brand),#8B5CF6)}
+    .course-footer{display:flex;align-items:center;justify-content:space-between}
+    .progress-text{font-size:.78rem;color:var(--ink-soft)}
+    .btn-open{background:var(--brand);color:var(--white);font-family:'Manrope',sans-serif;font-weight:700;font-size:.82rem;padding:7px 16px;border-radius:8px;border:none;cursor:pointer;transition:background .15s}
+    @media(max-width:600px){.nav-links a:not(.btn-nav){display:none}.modal{padding:20px}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html"><span class="dot"></span>Mentoria <span>Hub</span></a>
+  <div class="nav-links">
+    <a href="opportunities.html">Возможности</a>
+    <a href="courses.html" class="active">Курсы</a>
+    <a href="dashboard.html">Кабинет</a>
+    <a href="dashboard.html" class="btn-nav">Войти</a>
+  </div>
+</nav>
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-label">Обучение</div>
+  <h1>Курсы Mentoria</h1>
+  <p>Учись в удобное время. Уроки, тесты, прогресс — всё сохраняется автоматически.</p>
+</div></div>
+<div class="main"><div class="courses-grid" id="coursesGrid"></div></div>
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-thumb" id="modalThumb"></div>
+    <div class="course-level" id="modalLevel"></div>
+    <h2 id="modalTitle"></h2>
+    <p class="modal-desc" id="modalDesc"></p>
+    <div class="modal-progress-label"><span>Прогресс</span><span id="modalProgressText">0%</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="modalProgressFill" style="width:0%"></div></div>
+    <div class="lessons-title">Уроки курса</div>
+    <div id="modalLessons"></div>
+    <button class="btn-enroll" id="enrollBtn" onclick="enrollCourse()">Начать курс</button>
+  </div>
+</div>
+<script>
+const courses=[
+  {id:'math',emoji:'📐',thumb:'thumb-blue',level:'Базовый',title:'Основы математики',desc:'Алгебра, геометрия и теория вероятностей. Подготовка к ЕНТ, SAT и олимпиадам.',lessons:['Введение: зачем нужна математика','Алгебра — уравнения и неравенства','Функции и графики','Геометрия — площади и объёмы','Тригонометрия основы','Теория вероятностей','Комбинаторика','Прогрессии','Задачи на логику','Финальный тест','Разбор ошибок','Итоговый урок']},
+  {id:'english',emoji:'🇬🇧',thumb:'thumb-orange',level:'Средний',title:'Английский для академического успеха',desc:'Academic writing, IELTS/SAT vocabulary и навыки эссе для поступления в вуз.',lessons:['Академический английский','Структура эссе','Linking words','Описание графиков','Аргументация','IELTS Writing Task 1','IELTS Writing Task 2','SAT Reading','Vocabulary','Финальное эссе']},
+  {id:'biology',emoji:'🔬',thumb:'thumb-green',level:'Базовый',title:'Основы биологии',desc:'Клетка, генетика, экология — для олимпиад и международных программ.',lessons:['Клетка — строение и функции','ДНК и РНК','Митоз и мейоз','Законы Менделя','Эволюция','Экосистемы','Человек — системы органов','Итоговый тест']},
+  {id:'cs',emoji:'💻',thumb:'thumb-purple',level:'Базовый',title:'Основы информатики',desc:'Алгоритмы, структуры данных и основы программирования на Python.',lessons:['Что такое алгоритм?','Переменные и типы данных','Условия и циклы','Функции','Массивы и списки','Алгоритмы сортировки','Основы ООП','Финальный проект']},
+  {id:'sat',emoji:'📝',thumb:'thumb-red',level:'Продвинутый',title:'Подготовка к SAT / IELTS',desc:'Стратегии и практика по всем секциям экзаменов.',lessons:['Структура SAT и IELTS','Reading — стратегии','Writing & Language','Math без калькулятора','Math с калькулятором','IELTS Listening','IELTS Speaking','Speaking — структура','Пробный тест SAT','Пробный тест IELTS']}
+];
+function getProgress(id){return JSON.parse(localStorage.getItem('progress_'+id)||'[]')}
+function saveProgress(id,done){localStorage.setItem('progress_'+id,JSON.stringify(done))}
+function isEnrolled(id){return localStorage.getItem('enrolled_'+id)==='1'}
+function enroll(id){localStorage.setItem('enrolled_'+id,'1')}
+function renderGrid(){
+  document.getElementById('coursesGrid').innerHTML=courses.map(c=>{
+    const done=getProgress(c.id);
+    const pct=Math.round((done.length/c.lessons.length)*100);
+    return`<div class="course-card" onclick="openModal('${c.id}')"><div class="course-thumb ${c.thumb}">${c.emoji}</div><div class="course-body"><div class="course-level">${c.level}</div><h3>${c.title}</h3><p>${c.desc}</p><div class="course-meta"><span>📖 ${c.lessons.length} уроков</span></div><div class="progress-bar-sm"><div class="progress-fill-sm" style="width:${pct}%"></div></div><div class="course-footer"><span class="progress-text">${pct>0?pct+'% пройдено':'Не начат'}</span><button class="btn-open">Открыть</button></div></div></div>`
+  }).join('')
+}
+let currentCourse=null;
+function openModal(id){
+  currentCourse=courses.find(c=>c.id===id);
+  const done=getProgress(id);
+  const pct=Math.round((done.length/currentCourse.lessons.length)*100);
+  document.getElementById('modalThumb').className='modal-thumb '+currentCourse.thumb;
+  document.getElementById('modalThumb').textContent=currentCourse.emoji;
+  document.getElementById('modalLevel').textContent=currentCourse.level;
+  document.getElementById('modalTitle').textContent=currentCourse.title;
+  document.getElementById('modalDesc').textContent=currentCourse.desc;
+  document.getElementById('modalProgressText').textContent=pct+'%';
+  document.getElementById('modalProgressFill').style.width=pct+'%';
+  document.getElementById('modalLessons').innerHTML=currentCourse.lessons.map((l,i)=>{
+    const isDone=done.includes(i);
+    return`<div class="lesson-item ${isDone?'done':''}" onclick="toggleLesson(${i})"><div class="lesson-num">${i+1}</div><div class="lesson-info"><strong>${l}</strong><span>${isDone?'Завершён':'Нажми, чтобы отметить'}</span></div><span>${isDone?'✅':'○'}</span></div>`
+  }).join('');
+  const btn=document.getElementById('enrollBtn');
+  btn.textContent=isEnrolled(id)?(pct===100?'🎉 Курс завершён!':'Продолжить курс'):'Начать курс';
+  btn.disabled=pct===100;
+  document.getElementById('overlay').classList.add('open');
+}
+function toggleLesson(i){
+  if(!currentCourse)return;
+  enroll(currentCourse.id);
+  let done=getProgress(currentCourse.id);
+  if(done.includes(i))done=done.filter(x=>x!==i);else done.push(i);
+  saveProgress(currentCourse.id,done);
+  openModal(currentCourse.id);renderGrid();
+}
+function enrollCourse(){
+  if(!currentCourse)return;
+  enroll(currentCourse.id);
+  let done=getProgress(currentCourse.id);
+  if(done.length===0){done=[0];saveProgress(currentCourse.id,done);}
+  openModal(currentCourse.id);renderGrid();
+}
+function closeModal(e){if(e.target===document.getElementById('overlay'))closeModalDirect()}
+function closeModalDirect(){document.getElementById('overlay').classList.remove('open');currentCourse=null}
+renderGrid();
+</script>
+</body>
+</html>
