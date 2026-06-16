@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Возможности — Mentoria Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root{--ink:#0F1117;--ink-soft:#4B5263;--canvas:#F7F8FC;--white:#FFFFFF;--brand:#5B6BF8;--brand-dk:#3A4CE0;--brand-lt:#EEF0FE;--accent:#F4A340;--accent-lt:#FEF5E7;--green:#22C55E;--green-lt:#DCFCE7;--red-lt:#FEF2F2;--red:#EF4444;--border:#E4E7EF;--shadow-md:0 4px 20px rgba(15,17,23,.10);--r:12px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Inter',sans-serif;background:var(--canvas);color:var(--ink);line-height:1.6}
+    nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between}
+    .nav-logo{font-family:'Manrope',sans-serif;font-weight:800;font-size:1.15rem;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+    .nav-logo span{color:var(--brand)}
+    .dot{width:8px;height:8px;border-radius:50%;background:var(--brand);display:inline-block}
+    .nav-links{display:flex;align-items:center;gap:6px}
+    .nav-links a{font-size:.9rem;font-weight:500;color:var(--ink-soft);text-decoration:none;padding:6px 14px;border-radius:8px;transition:background .15s,color .15s}
+    .nav-links a:hover,.nav-links a.active{background:var(--brand-lt);color:var(--brand)}
+    .btn-nav{background:var(--brand);color:var(--white)!important;border-radius:8px;padding:7px 18px!important}
+    .page-header{background:var(--white);border-bottom:1px solid var(--border);padding:36px 24px 28px}
+    .page-header-inner{max-width:1040px;margin:0 auto}
+    .page-label{font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);margin-bottom:8px}
+    .page-header h1{font-family:'Manrope',sans-serif;font-size:clamp(1.5rem,3vw,2rem);font-weight:800;margin-bottom:6px}
+    .page-header p{color:var(--ink-soft);font-size:.95rem}
+    .filters-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:16px 24px;position:sticky;top:62px;z-index:90}
+    .filters-inner{max-width:1040px;margin:0 auto;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .filter-btn{font-size:.82rem;font-weight:600;padding:6px 16px;border-radius:100px;border:1.5px solid var(--border);background:var(--white);color:var(--ink-soft);cursor:pointer;transition:all .15s}
+    .filter-btn:hover,.filter-btn.active{background:var(--brand);color:var(--white);border-color:var(--brand)}
+    .search-box{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--canvas);border:1.5px solid var(--border);border-radius:100px;padding:6px 16px}
+    .search-box input{border:none;background:none;font-size:.85rem;color:var(--ink);outline:none;width:180px}
+    .main{max-width:1040px;margin:0 auto;padding:28px 24px 72px}
+    .results-label{font-size:.85rem;color:var(--ink-soft);margin-bottom:20px}
+    .results-label strong{color:var(--ink)}
+    .cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+    .card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r);padding:22px;transition:border-color .15s,box-shadow .15s,transform .15s;display:flex;flex-direction:column}
+    .card:hover{border-color:var(--brand);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+    .card[data-hidden="true"]{display:none}
+    .card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+    .card-tag{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:100px}
+    .tag-stem{background:var(--brand-lt);color:var(--brand)}
+    .tag-biz{background:var(--accent-lt);color:#B45309}
+    .tag-social{background:var(--green-lt);color:#15803D}
+    .tag-finance{background:#F0FDF4;color:#166534}
+    .tag-code{background:#FDF4FF;color:#7E22CE}
+    .btn-save{background:none;border:1.5px solid var(--border);border-radius:8px;padding:4px 10px;font-size:.78rem;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:all .15s;white-space:nowrap}
+    .btn-save:hover,.btn-save.saved{border-color:var(--brand);color:var(--brand);background:var(--brand-lt)}
+    .card h3{font-family:'Manrope',sans-serif;font-size:1rem;font-weight:700;margin-bottom:8px}
+    .card p{font-size:.87rem;color:var(--ink-soft);margin-bottom:14px;flex:1}
+    .card-meta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .card-meta span{display:flex;align-items:center;gap:4px;font-size:.77rem;color:var(--ink-soft)}
+    .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+    .deadline{font-size:.77rem;font-weight:600;color:var(--red);background:var(--red-lt);padding:3px 10px;border-radius:100px}
+    .btn-apply{display:inline-block;background:var(--brand);color:var(--white);font-family:'Manrope',sans-serif;font-weight:700;font-size:.82rem;padding:7px 16px;border-radius:8px;text-decoration:none;border:none;cursor:pointer;transition:background .15s}
+    .empty{text-align:center;padding:64px 24px;display:none}
+    .empty.show{display:block}
+    .empty-icon{font-size:3rem;margin-bottom:16px}
+    .empty h3{font-family:'Manrope',sans-serif;font-weight:700;margin-bottom:8px}
+    .empty p{color:var(--ink-soft);font-size:.9rem}
+    @media(max-width:600px){.nav-links a:not(.btn-nav){display:none}.search-box{margin-left:0;width:100%}.search-box input{width:100%}}
+  </style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html"><span class="dot"></span>Mentoria <span>Hub</span></a>
+  <div class="nav-links">
+    <a href="opportunities.html" class="active">Возможности</a>
+    <a href="courses.html">Курсы</a>
+    <a href="dashboard.html">Кабинет</a>
+    <a href="dashboard.html" class="btn-nav">Войти</a>
+  </div>
+</nav>
+<div class="page-header"><div class="page-header-inner">
+  <div class="page-label">Каталог</div>
+  <h1>Образовательные возможности</h1>
+  <p>Конкурсы, олимпиады, стипендии, летние школы и стажировки — всё в одном месте.</p>
+</div></div>
+<div class="filters-wrap"><div class="filters-inner">
+  <button class="filter-btn active" onclick="filterCards('all',this)">Все</button>
+  <button class="filter-btn" onclick="filterCards('stem',this)">🔬 STEM</button>
+  <button class="filter-btn" onclick="filterCards('biz',this)">💼 Бизнес</button>
+  <button class="filter-btn" onclick="filterCards('social',this)">🌍 Социальное</button>
+  <button class="filter-btn" onclick="filterCards('finance',this)">💰 Финансы</button>
+  <button class="filter-btn" onclick="filterCards('code',this)">💻 IT</button>
+  <div class="search-box"><span>🔍</span><input type="text" placeholder="Поиск..." oninput="searchCards(this.value)"/></div>
+</div></div>
+<div class="main">
+  <div class="results-label">Найдено: <strong id="count">10</strong> возможностей</div>
+  <div class="cards-grid" id="cards">
+    <div class="card" data-cat="stem"><div class="card-top"><span class="card-tag tag-stem">STEM</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Международная олимпиада по математике (IMO)</h3><p>Престижнейшее соревнование для школьников со всего мира. Казахстанский отбор проходит в марте–апреле.</p><div class="card-meta"><span>🌍 Онлайн + офлайн</span><span>📚 9–11 класс</span><span>🏆 Олимпиада</span></div><div class="card-footer"><span class="deadline">⏰ 30 июня 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="biz"><div class="card-top"><span class="card-tag tag-biz">Бизнес</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Young Entrepreneurs Challenge 2026</h3><p>Командный конкурс бизнес-идей. Призовой фонд — $5 000 и менторство от экспертов.</p><div class="card-meta"><span>💻 Онлайн</span><span>📚 8–11 класс</span><span>🏆 Конкурс</span></div><div class="card-footer"><span class="deadline">⏰ 15 июля 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="social"><div class="card-top"><span class="card-tag tag-social">Социальное</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Летняя школа MIT OpenCourseWare</h3><p>Бесплатная онлайн-программа от MIT. Сертификат и рекомендательное письмо.</p><div class="card-meta"><span>🌐 Онлайн</span><span>📚 10–11 класс</span><span>🏫 Летняя школа</span></div><div class="card-footer"><span class="deadline">⏰ 1 августа 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="stem"><div class="card-top"><span class="card-tag tag-stem">STEM</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Олимпиада по физике IPhO 2026</h3><p>Международная олимпиада по физике. Отбор через национальный тур.</p><div class="card-meta"><span>🌍 Офлайн</span><span>📚 10–11 класс</span><span>🏆 Олимпиада</span></div><div class="card-footer"><span class="deadline">⏰ 20 июля 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="finance"><div class="card-top"><span class="card-tag tag-finance">Финансы</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Стипендия Bolashak — Подготовительный трек</h3><p>Государственная стипендия Казахстана для обучения за рубежом.</p><div class="card-meta"><span>🇰🇿 Казахстан</span><span>📚 11 класс</span><span>🎓 Стипендия</span></div><div class="card-footer"><span class="deadline">⏰ 1 сентября 2026</span><button class="btn-apply">Подробнее</button></div></div>
+    <div class="card" data-cat="code"><div class="card-top"><span class="card-tag tag-code">IT</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Хакатон Google Student Developer</h3><p>Командный хакатон от Google для школьников. Менторы, призы и портфолио.</p><div class="card-meta"><span>💻 Онлайн</span><span>📚 9–11 класс</span><span>⚡ Хакатон</span></div><div class="card-footer"><span class="deadline">⏰ 10 августа 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="social"><div class="card-top"><span class="card-tag tag-social">Социальное</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Программа волонтёрства AIESEC</h3><p>Международные волонтёрские проекты в 120+ странах.</p><div class="card-meta"><span>🌍 Разные страны</span><span>📚 8–11 класс</span><span>🤝 Волонтёрство</span></div><div class="card-footer"><span class="deadline">⏰ 5 августа 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="stem"><div class="card-top"><span class="card-tag tag-stem">STEM</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Research Internship — Назарбаев Университет</h3><p>Летняя исследовательская стажировка в лабораториях НУ. Бесплатно.</p><div class="card-meta"><span>🏫 Нур-Султан</span><span>📚 10–11 класс</span><span>🔬 Стажировка</span></div><div class="card-footer"><span class="deadline">⏰ 25 июня 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="biz"><div class="card-top"><span class="card-tag tag-biz">Бизнес</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Junior Achievement — Стартап-программа</h3><p>Создай свою компанию, продай продукт и защити перед жюри.</p><div class="card-meta"><span>💻 Онлайн + офлайн</span><span>📚 8–11 класс</span><span>🚀 Стартап</span></div><div class="card-footer"><span class="deadline">⏰ 30 августа 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+    <div class="card" data-cat="finance"><div class="card-top"><span class="card-tag tag-finance">Финансы</span><button class="btn-save" onclick="toggleSave(this)">♡ Сохранить</button></div><h3>Stock Market Game — финансовая симуляция</h3><p>Симуляция фондового рынка. Учись инвестировать без реальных денег.</p><div class="card-meta"><span>💻 Онлайн</span><span>📚 9–11 класс</span><span>📈 Конкурс</span></div><div class="card-footer"><span class="deadline">⏰ 15 сентября 2026</span><button class="btn-apply">Подать заявку</button></div></div>
+  </div>
+  <div class="empty" id="empty"><div class="empty-icon">🔍</div><h3>Ничего не найдено</h3><p>Попробуй другой фильтр.</p></div>
+</div>
+<script>
+  let activeFilter='all',searchQuery='';
+  function filterCards(cat,btn){activeFilter=cat;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateCards()}
+  function searchCards(val){searchQuery=val.toLowerCase();updateCards()}
+  function updateCards(){const cards=document.querySelectorAll('.card');let visible=0;cards.forEach(card=>{const catMatch=activeFilter==='all'||card.dataset.cat===activeFilter;const searchMatch=!searchQuery||card.innerText.toLowerCase().includes(searchQuery);const show=catMatch&&searchMatch;card.dataset.hidden=!show;if(show)visible++});document.getElementById('count').textContent=visible;document.getElementById('empty').classList.toggle('show',visible===0)}
+  function toggleSave(btn){const saved=btn.classList.toggle('saved');btn.textContent=saved?'♥ Сохранено':'♡ Сохранить';const title=btn.closest('.card').querySelector('h3').textContent;let list=JSON.parse(localStorage.getItem('saved')||'[]');if(saved)list.push(title);else list=list.filter(t=>t!==title);localStorage.setItem('saved',JSON.stringify(list))}
+  window.onload=()=>{const list=JSON.parse(localStorage.getItem('saved')||'[]');document.querySelectorAll('.card').forEach(card=>{const title=card.querySelector('h3').textContent;if(list.includes(title)){const btn=card.querySelector('.btn-save');btn.classList.add('saved');btn.textContent='♥ Сохранено'}})}
+</script>
+</body>
+</html>
